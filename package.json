@@ -1,0 +1,28 @@
+{
+  "name": "phishing-url-checker",
+  "version": "0.1.0",
+  "description": "入力されたURLのフィッシングリスクをスコアリングするCLIツール",
+  "author": "Kome",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "bin": {
+    "phishing-url-checker": "dist/index.js"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}
