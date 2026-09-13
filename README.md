@@ -9,6 +9,15 @@
 無料ホスティングの悪用)をルールベースで検出し、スコアを合算して判定を出します。
 外部APIには依存せず、ローカルで完結して動作します。
 
+## 構成
+
+このリポジトリには、判定ロジック([src/riskChecker.ts](src/riskChecker.ts))を
+共有する2つのアプリケーションが含まれています。
+
+- **CLIツール**(このREADMEで説明): `src/` — ターミナルからURLを判定
+- **Chrome/Edge拡張機能**: [extension/](extension/) — ページ内リンクのホバー/クリックを
+  監視し、危険なURLへの遷移をブロック。詳細は [extension/README.md](extension/README.md) を参照
+
 ## インストール
 
 Node.js 18以上が必要です。

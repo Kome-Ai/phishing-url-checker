@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>phishing-url-checker 拡張機能 テストページ</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 20px;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 22px; }
+  h2 { font-size: 17px; margin-top: 40px; border-left: 5px solid #6b7280; padding-left: 10px; }
+  .notice {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 14px;
+    background: #fff;
+  }
+  th, td {
+    border: 1px solid #e5e7eb;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #f3f4f6; }
+  .expect-safe { color: #15803d; font-weight: 700; }
+  .expect-caution { color: #b45309; font-weight: 700; }
+  .expect-danger { color: #b91c1c; font-weight: 700; }
+  code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .section-note { font-size: 13px; color: #6b7280; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>🧪 phishing-url-checker 拡張機能 テストページ</h1>
+
+<div class="notice">
+  <strong>使い方:</strong>
+  各リンクに<strong>マウスを乗せる(ホバー)</strong>と、「注意」「危険」の判定リンクには
+  カーソル付近にバッジが表示されるか確認してください。次に<strong>クリック</strong>し、
+  「危険」判定のリンクは遷移がブロックされ警告モーダルが出るか、それ以外は
+  普通に遷移する(または新しいタブが開く)か確認してください。<br /><br />
+  ⚠️ ブランドなりすまし・タイポスクワッティングの例は、実際の攻撃ドメインではなく
+  <code>example.com</code> / <code>example.net</code>(IANA予約ドメイン)のサブドメインを
+  使っています。万一ブロックに失敗しても、表示されるのは接続エラーだけで、
+  実在する悪意あるサイトには繋がりません。無料ホスティングの例はFirebase/Herokuの
+  実インフラ上の未登録サブドメインなので、こちらも安全です。
+</div>
+
+<h2>1. 安全なリンク <span class="section-note">(想定: <span class="expect-safe">🟢 安全</span>)</span></h2>
+<table>
+  <tr><th>URL</th><th>想定判定</th><th>リンク</th></tr>
+  <tr>
+    <td><code>https://www.google.com</code></td>
+    <td class="expect-safe">🟢 安全</td>
+    <td><a href="https://www.google.com">www.google.com へ</a></td>
+  </tr>
+  <tr>
+    <td><code>https://example.com</code></td>
+    <td class="expect-safe">🟢 安全</td>
+    <td><a href="https://example.com">example.com へ</a></td>
+  </tr>
+</table>
+
+<h2>2. ブランドなりすまし <span class="section-note">(想定: <span class="expect-danger">🔴 危険</span>, スコア60)</span></h2>
+<table>
+  <tr><th>URL</th><th>想定判定</th><th>リンク</th></tr>
+  <tr>
+    <td><code>https://accounts-google-verify.example.com</code></td>
+    <td class="expect-danger">🔴 危険<br /><span class="section-note">brand-impersonation: google</span></td>
+    <td><a href="https://accounts-google-verify.example.com">accounts-google-verify.example.com へ</a></td>
+  </tr>
+  <tr>
+    <td><code>https://paypal-secure-login.example.net</code></td>
+    <td class="expect-danger">🔴 危険<br /><span class="section-note">brand-impersonation: paypal</span></td>
+    <td><a href="https://paypal-secure-login.example.net">paypal-secure-login.example.net へ</a></td>
+  </tr>
+</table>
+
+<h2>3. タイポスクワッティング <span class="section-note">(想定: <span class="expect-caution">🟡 注意</span>, スコア50)</span></h2>
+<table>
+  <tr><th>URL</th><th>想定判定</th><th>リンク</th></tr>
+  <tr>
+    <td><code>https://goog1e.example.com</code></td>
+    <td class="expect-caution">🟡 注意<br /><span class="section-note">typosquatting: google (編集距離1)</span></td>
+    <td><a href="https://goog1e.example.com">goog1e.example.com へ</a></td>
+  </tr>
+  <tr>
+    <td><code>https://paypa1-login.example.net</code></td>
+    <td class="expect-caution">🟡 注意<br /><span class="section-note">typosquatting: paypal (編集距離1)</span></td>
+    <td><a href="https://paypa1-login.example.net">paypa1-login.example.net へ</a></td>
+  </tr>
+</table>
+
+<h2>4. 無料ホスティング <span class="section-note">(想定: <span class="expect-caution">🟡 注意</span>, スコア30)</span></h2>
+<table>
+  <tr><th>URL</th><th>想定判定</th><th>リンク</th></tr>
+  <tr>
+    <td><code>https://phishing-test.firebaseapp.com</code></td>
+    <td class="expect-caution">🟡 注意<br /><span class="section-note">free-hosting: firebaseapp.com</span></td>
+    <td><a href="https://phishing-test.firebaseapp.com">phishing-test.firebaseapp.com へ</a></td>
+  </tr>
+  <tr>
+    <td><code>https://fake-bank-login.herokuapp.com</code></td>
+    <td class="expect-caution">🟡 注意<br /><span class="section-note">free-hosting: herokuapp.com</span></td>
+    <td><a href="https://fake-bank-login.herokuapp.com">fake-bank-login.herokuapp.com へ</a></td>
+  </tr>
+</table>
+
+<h2>5. (参考) 複合パターン <span class="section-note">(想定: <span class="expect-danger">🔴 危険</span>, スコア80 = タイポ50+無料ホスティング30)</span></h2>
+<table>
+  <tr><th>URL</th><th>想定判定</th><th>リンク</th></tr>
+  <tr>
+    <td><code>https://goog1e-secure.firebaseapp.com</code></td>
+    <td class="expect-danger">🔴 危険<br /><span class="section-note">typosquatting + free-hosting</span></td>
+    <td><a href="https://goog1e-secure.firebaseapp.com">goog1e-secure.firebaseapp.com へ</a></td>
+  </tr>
+</table>
+
+<h2>6. (参考) 誤検知しないことの確認 <span class="section-note">(想定: <span class="expect-safe">🟢 安全</span>)</span></h2>
+<table>
+  <tr><th>URL</th><th>想定判定</th><th>リンク</th></tr>
+  <tr>
+    <td><code>https://accounts.google.com</code>(公式のサブドメイン)</td>
+    <td class="expect-safe">🟢 安全</td>
+    <td><a href="https://accounts.google.com">accounts.google.com へ</a></td>
+  </tr>
+</table>
+
+</body>
+</html>
