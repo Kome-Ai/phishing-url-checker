@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Phishing URL Checker",
-  "version": "0.1.0",
-  "description": "ページ内リンクをホバー・クリック時にスコアリングし、危険と判定されたURLへの遷移をブロックして警告を表示します。",
+  "version": "1.0.0",
+  "description": "リンクにカーソルを合わせるだけでフィッシングの危険度を表示し、危険なURLへのアクセスは自動でブロックします。データは一切外部送信しません。",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",

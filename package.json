@@ -21,10 +21,12 @@
     "build:extension": "tsc -p extension/tsconfig.json && node extension/build.mjs",
     "dev:extension": "node extension/build.mjs --watch",
     "serve:test-page": "node extension/serve.mjs",
-    "generate:icons": "node extension/generate-icons.mjs"
+    "generate:icons": "node extension/generate-icons.mjs",
+    "package:extension": "npm run build:extension && node extension/package.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
+    "archiver": "^7.0.1",
     "esbuild": "^0.23.1",
     "pngjs": "^7.0.0",
     "tsx": "^4.16.2",
